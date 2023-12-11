@@ -19,11 +19,11 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // Define a simple schema for a "shoe" collection (ODM)
 const shoeSchema = new mongoose.Schema({
-  name: String,
-  color: String,
+  name: { type: String, index: true },
+  color: { type: String, index: true },
   brand: String,
   type: String,
-  size: String,
+  size: { type: String, index: true },
 });
 
 // create a model
@@ -33,7 +33,7 @@ const Entry = mongoose.model('shoe', shoeSchema);
 app.post('/add-entry', async (req, res) => {
 
   // create a new form for the relevant entries
-  const { name, color, brand, type, size} = req.body;
+  const { name, color, brand, type, size } = req.body;
   const newEntry = new Entry({ name, color, brand, type, size, });
   console.log(newEntry)
 
@@ -43,6 +43,7 @@ app.post('/add-entry', async (req, res) => {
     console.log("good")
     res.status(201).json(newEntry);
   } catch (error) {
+    console.error(error)
     console.log("bad")
     res.status(400).send(error);
   }
@@ -50,6 +51,7 @@ app.post('/add-entry', async (req, res) => {
 
 // GET endpoint to get shoe entries
 app.get('/getFromDb', async(req, res) => {
+
 
   Entry.find()
   .then(shoes => res.json(shoes))
@@ -183,6 +185,7 @@ app.post('/delete-entry', async (req, res) => {
     return res.json({ status: "ok", data: "deleted" })
   } catch (error) {
     console.log("bad")
+    console.error(error)
     // res.status(400).send(error);
     return res.json({ status: "fart", data: "bad" })
   }
@@ -192,5 +195,6 @@ app.post('/delete-entry', async (req, res) => {
 const port = 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  // console.log(mongoUri)
   console.log(mongoose.version)
 });

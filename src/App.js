@@ -218,7 +218,7 @@ function App() {
         <tbody>
 
           {
-            shoes.map(shoes => {
+            Array.isArray(shoes) && shoes.map(shoes => {
               return <tr>
                 <td>{shoes.name}</td>
                 <td>{shoes.color}</td>
